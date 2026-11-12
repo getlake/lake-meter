@@ -1,0 +1,45 @@
+{
+  "name": "lake-meter",
+  "version": "0.1.0",
+  "description": "Per-step model picks and a hard per-run cost cap for Claude Code. Hooks + MCP, local only, no telemetry.",
+  "type": "module",
+  "bin": {
+    "lake-meter": "bin/lake-meter.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "demo": "bash scripts/demo.sh"
+  },
+  "keywords": [
+    "claude-code",
+    "claude",
+    "hooks",
+    "mcp",
+    "cost",
+    "tokens",
+    "budget",
+    "llm",
+    "cursor",
+    "ai-agents"
+  ],
+  "license": "MIT",
+  "author": "Lake",
+  "homepage": "https://github.com/LAKE_ORG/lake-meter#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LAKE_ORG/lake-meter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LAKE_ORG/lake-meter/issues"
+  },
+  "mcpName": "io.github.LAKE_ORG/lake-meter"
+}

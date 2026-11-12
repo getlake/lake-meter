@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>lake-meter · A model for every step, a stop for every run</title>
+<meta name="description" content="Open-source cost control for Claude Code. Per-step model recommendations with cost estimates in plan mode, a per-run cap that stops and asks, and a measured receipt when the run ends. Local only, no telemetry.">
+<meta name="theme-color" content="#0e7c7b">
+<meta property="og:title" content="lake-meter · A model for every step, a stop for every run">
+<meta property="og:description" content="Per-step model picks and a hard per-run cap for Claude Code. One command, local only, no telemetry.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://LAKE_SITE_URL/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo-mark.svg">
+<link rel="preload" href="assets/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+<!-- Visit counting: GoatCounter (free, cookieless, no consent banner needed). Replace GOATCOUNTER_CODE with your site code, e.g. "lake-meter". -->
+<script data-goatcounter="https://GOATCOUNTER_CODE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4 1.3-4-2-6-2.5m12 4.5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6.2 0C6.6 2.8 5.6 3.1 5.6 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4.2 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></symbol>
+</svg>
+
+<header class="nav wrap">
+  <a class="brand" href="#top" aria-label="Lake home"><img src="assets/logo-mark.svg" alt="" width="30" height="30"><span>Lake<i>.</i></span></a>
+  <span class="brand-sub">meter <b>for Claude Code</b></span>
+  <nav aria-label="Main">
+    <a href="#how">How it works</a>
+    <a href="#honest">Honest numbers</a>
+    <a href="#pro">Pro</a>
+    <a class="btn btn-ghost" href="https://github.com/LAKE_ORG/lake-meter"><svg><use href="#i-gh"/></svg>GitHub</a>
+  </nav>
+</header>
+
+<main id="top">
+<section class="hero" aria-labelledby="h1">
+  <img class="scene" src="assets/lake-editorial-scene.svg" alt="" fetchpriority="high">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="rule"></span>OPEN SOURCE · CLAUDE CODE · MIT</p>
+      <h1 id="h1">A model for<br>every step.<br><span>A stop for<br>every run.</span></h1>
+      <p class="lede">lake-meter tells you which model each step of your plan actually needs, what it should cost, and stops the run when it reaches the budget you set. <strong>Before the limit is gone.</strong></p>
+      <div class="install" role="group" aria-label="Install command">
+        <code><span class="prompt">$</span> npx lake-meter init</code>
+        <button class="copy" type="button" data-copy="npx lake-meter init" aria-label="Copy install command"><svg class="ic-copy"><use href="#i-copy"/></svg><svg class="ic-done"><use href="#i-check"/></svg></button>
+      </div>
+      <p class="micro">One command. Local only. No account, no telemetry.<br>Uses Claude Code's own hooks, statusline and plan dialog.</p>
+    </div>
+
+    <div class="stage" aria-label="Product preview">
+      <figure class="card plan">
+        <figcaption class="card-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Ready to code? · plan mode</span><span class="tag">estimate</span></figcaption>
+        <div class="plan-sum"><span class="eyebrow">LAKE METER</span><p><b>$3.53–13.0</b> with a model per step<span class="vs">vs $3.96–14.5 all on Opus</span></p></div>
+        <ol class="steps">
+          <li><span class="n">01</span><span class="t">Add retry settings to config</span><span class="lvl" data-l="1" aria-label="complexity 1 of 5"></span><span class="chip haiku">Haiku</span><span class="c">&lt;$0.01</span></li>
+          <li><span class="n">02</span><span class="t">Idempotent delivery queue</span><span class="lvl" data-l="5" aria-label="complexity 5 of 5"></span><span class="chip opus">Opus</span><span class="c">$2.10–8.22</span></li>
+          <li><span class="n">03</span><span class="t">Retry worker with backoff</span><span class="lvl" data-l="4" aria-label="complexity 4 of 5"></span><span class="chip opus">Opus</span><span class="c">$1.01–3.38</span></li>
+          <li><span class="n">04</span><span class="t">Delivery status endpoint</span><span class="lvl" data-l="3" aria-label="complexity 3 of 5"></span><span class="chip sonnet">Sonnet</span><span class="c">$0.21–0.71</span></li>
+          <li><span class="n">05</span><span class="t">Failure-path tests</span><span class="lvl" data-l="3" aria-label="complexity 3 of 5"></span><span class="chip sonnet">Sonnet</span><span class="c">$0.21–0.71</span></li>
+          <li><span class="n">06</span><span class="t">Changelog entry</span><span class="lvl" data-l="1" aria-label="complexity 1 of 5"></span><span class="chip haiku">Haiku</span><span class="c">&lt;$0.01</span></li>
+        </ol>
+      </figure>
+      <figure class="card cap">
+        <div class="cap-head"><span class="pause"><svg><use href="#i-pause"/></svg></span><div><b>Run cap reached</b><span>$2.15 of $2.00 · before the next tool call</span></div></div>
+        <div class="meter" aria-hidden="true"><i style="width:100%"></i></div>
+        <div class="cap-actions"><span class="pill yes">Yes · +$1.00 headroom</span><span class="pill">No · stop here</span></div>
+      </figure>
+      <figure class="card receipt">
+        <span class="eyebrow">RECEIPT · MEASURED</span>
+        <p><b>$3.44</b> · 524k tok · Opus $3.44</p>
+        <span class="sub">since plan approved $3.25 · estimate $3.53–13.0</span>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="pains wrap" aria-label="The problem">
+  <p>The limit is gone at 11am.</p><p>A loop ran all night.</p><p>Opus wrote the changelog.</p><p>Six subagents, one bill.</p>
+</section>
+
+<section id="how" class="how wrap" aria-labelledby="how-h">
+  <p class="eyebrow"><span class="rule"></span>THREE MOMENTS</p>
+  <h2 id="how-h">Before, during, and after<br><span>every run.</span></h2>
+  <div class="moments">
+    <article>
+      <span class="num">01</span>
+      <h3>Plan: a model per step</h3>
+      <p>When Claude writes a plan, lake-meter rates each step 1 to 5, picks the cheapest model that should handle it, and adds tokens and dollar ranges next to the cost of running all of it on Opus. It shows up inside Claude Code's own plan dialog.</p>
+      <p class="fine">Two optional subagents, pinned to Haiku and Sonnet, make the advice one delegation away.</p>
+    </article>
+    <article>
+      <span class="num">02</span>
+      <h3>Run: a cap that asks</h3>
+      <p>Set a budget per run in dollars, tokens, or a share of your 5-hour window. When a run reaches it, the next tool call becomes a permission prompt. Yes adds headroom. No stops Claude right there. Unattended runs end the turn instead.</p>
+      <p class="fine">Adjust anytime with <code>/meter cap 10</code>.</p>
+    </article>
+    <article>
+      <span class="num">03</span>
+      <h3>After: a measured receipt</h3>
+      <p>When Claude stops, you get the run's real token count and its list-price cost, split by model and subagents, next to what the plan estimated. Your history stays in a local file for <code>lake-meter report</code>.</p>
+      <p class="fine">Plus a live meter in the statusline.</p>
+    </article>
+  </div>
+</section>
+
+<section id="honest" class="honest" aria-labelledby="honest-h">
+  <div class="wrap">
+    <p class="eyebrow"><span class="rule"></span>HONEST NUMBERS</p>
+    <h2 id="honest-h">We tell you what's measured<br><span>and what's a guess.</span></h2>
+    <div class="table" role="table" aria-label="Measured versus estimated">
+      <div class="row head" role="row"><span role="columnheader">Number</span><span role="columnheader">Source</span><span role="columnheader">Status</span></div>
+      <div class="row" role="row"><span role="cell">Tokens per run</span><span role="cell">Claude Code's session and subagent transcripts, de-duplicated per response</span><span role="cell"><em class="m">Measured</em></span></div>
+      <div class="row" role="row"><span role="cell">Dollars per run</span><span role="cell">Measured tokens × list prices in one editable file, per request. Matched Claude Code's own cost figure in our tests</span><span role="cell"><em class="m">Computed</em></span></div>
+      <div class="row" role="row"><span role="cell">5-hour window</span><span role="cell">The percentage Claude Code reports to the statusline on Pro and Max</span><span role="cell"><em class="m">Reported</em></span></div>
+      <div class="row" role="row"><span role="cell">Plan breakdown</span><span role="cell">Keyword and size heuristics plus token budgets you can tune. Every reason is shown with <code>--why</code></span><span role="cell"><em class="e">Estimate</em></span></div>
+    </div>
+    <p class="note">Dollar figures are API list-price equivalents, verified 12 Nov 2026. On a subscription they measure how heavy a run was, not what you were charged. The cap is checked before each tool call, so a single long response can pass it.</p>
+  </div>
+</section>
+
+<section class="built wrap" aria-labelledby="built-h">
+  <div>
+    <p class="eyebrow"><span class="rule"></span>NO MAGIC</p>
+    <h2 id="built-h">Built on what Claude Code<br><span>already exposes.</span></h2>
+    <p class="lede small">Four hooks, a statusline, a skill and two subagents. <code>npx lake-meter uninstall</code> restores your settings exactly. Nothing leaves your machine.</p>
+  </div>
+  <ul class="hooks">
+    <li><code>UserPromptSubmit</code><span>marks where a run starts</span></li>
+    <li><code>PreToolUse</code><span>prices new usage and asks at the cap</span></li>
+    <li><code>PostToolUse</code><span>grants headroom, annotates the plan</span></li>
+    <li><code>Stop</code><span>prints the receipt, never blocks</span></li>
+    <li><code>statusLine</code><span>live meter and 5-hour window</span></li>
+    <li><code>MCP</code><span>plan estimates in Cursor and others</span></li>
+  </ul>
+</section>
+
+<section id="pro" class="pro" aria-labelledby="pro-h">
+  <div class="wrap pro-grid">
+    <div>
+      <p class="eyebrow light"><span class="rule"></span>COMING SOON</p>
+      <h2 id="pro-h">Lake Pro<br><span>for teams.</span></h2>
+      <ul class="pro-list">
+        <li><svg><use href="#i-check"/></svg>Shared budgets per repo and per teammate</li>
+        <li><svg><use href="#i-check"/></svg>A dashboard of runs by model, step and outcome</li>
+        <li><svg><use href="#i-check"/></svg>Plan approval before the expensive runs</li>
+      </ul>
+    </div>
+    <form id="waitlist" class="waitlist" data-endpoint="FORMSPREE_ENDPOINT" data-mailto="lake.research1@gmail.com" action="mailto:lake.research1@gmail.com?subject=lake-meter%20Pro%20waitlist" method="post" enctype="text/plain">
+      <label for="email">Join the waitlist</label>
+      <div class="field">
+        <input id="email" name="email" type="email" required placeholder="you@company.com" autocomplete="email">
+        <button class="btn" type="submit">Join <svg><use href="#i-arrow"/></svg></button>
+      </div>
+      <p class="form-note" id="form-note" role="status">One email when Pro opens. No sharing, no newsletter.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="foot wrap">
+  <a class="brand" href="#top"><img src="assets/logo-mark.svg" alt="" width="24" height="24"><span>Lake<i>.</i></span></a>
+  <span>A clear course before the code.</span>
+  <span class="grow"></span>
+  <a href="https://github.com/LAKE_ORG/lake-meter">GitHub</a>
+  <a href="https://www.npmjs.com/package/lake-meter">npm</a>
+  <span>MIT · not affiliated with Anthropic</span>
+</footer>
+</body>
+</html>
