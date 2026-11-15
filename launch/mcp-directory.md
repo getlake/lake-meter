@@ -22,17 +22,17 @@ Paste an implementation plan and lake-meter splits it into steps, rates each ste
 
 **Category:** Developer tools / Cost & observability
 **License:** MIT · **Transport:** stdio · **Auth:** none · **Network access:** none · **Telemetry:** none
-**Repository:** GITHUB_URL
+**Repository:** https://github.com/getlake/lake-meter
 **Maintainer:** Lake
 
 **server.json for the official registry** (fill after npm publish):
 ```json
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.LAKE_ORG/lake-meter",
+  "name": "io.github.getlake/lake-meter",
   "description": "Per-step model recommendations and cost estimates for coding-agent plans.",
   "version": "0.1.0",
   "packages": [{ "registryType": "npm", "identifier": "lake-meter", "version": "0.1.0", "transport": { "type": "stdio" }, "packageArguments": [{ "type": "positional", "value": "mcp" }] }]
 }
 ```
-(The registry verifies npm ownership via the `mcpName` field already in package.json. Replace LAKE_ORG there and here with the GitHub org, then `mcp-publisher login github` and `mcp-publisher publish`. Steps verified against the registry quickstart on 2026-11-12.)
+(The registry verifies npm ownership via the `mcpName` field already in package.json. Replace getlake there and here with the GitHub org, then `mcp-publisher login github` and `mcp-publisher publish`. Steps verified against the registry quickstart on 2026-11-12.)

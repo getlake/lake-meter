@@ -16,6 +16,13 @@ npx lake-meter init
 
 That's the whole install. Restart Claude Code (or open `/hooks`) and work as usual.
 
+If the npm package is not available yet, install from GitHub first:
+
+```bash
+npm i -g github:getlake/lake-meter
+lake-meter init
+```
+
 ---
 
 ## What you see
@@ -163,7 +170,7 @@ npm run demo        # simulated session: plan breakdown → cap prompt → recei
 
 ## Pro for teams (coming soon)
 
-Shared caps across a team, a dashboard of runs by repo and model, and a plan approval step before expensive runs. [Join the waitlist](https://LAKE_SITE_URL/#waitlist).
+Shared caps across a team, a dashboard of runs by repo and model, and a plan approval step before expensive runs. [Join the waitlist](https://getlake.github.io/lake-meter/#waitlist).
 
 ## License
 

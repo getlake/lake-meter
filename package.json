@@ -33,13 +33,13 @@
   ],
   "license": "MIT",
   "author": "Lake",
-  "homepage": "https://github.com/LAKE_ORG/lake-meter#readme",
+  "homepage": "https://github.com/getlake/lake-meter#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LAKE_ORG/lake-meter.git"
+    "url": "git+https://github.com/getlake/lake-meter.git"
   },
   "bugs": {
-    "url": "https://github.com/LAKE_ORG/lake-meter/issues"
+    "url": "https://github.com/getlake/lake-meter/issues"
   },
-  "mcpName": "io.github.LAKE_ORG/lake-meter"
+  "mcpName": "io.github.getlake/lake-meter"
 }

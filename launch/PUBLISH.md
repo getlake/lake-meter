@@ -4,7 +4,7 @@ Nothing has been published, pushed, registered or paid for. Everything below is 
 
 ## 0. Pick names (2 min)
 - **npm package:** `lake-meter` was free on 2026-11-12 (`npm view lake-meter` → 404). Also free: `lakemeter`, `claude-lake-meter`.
-- **GitHub org/user** for the repo, e.g. a new free org `lake-dev` (any free name). This becomes `LAKE_ORG`.
+- **GitHub org/user** for the repo, e.g. a new free org `lake-dev` (any free name). This becomes `getlake`.
 - Then fill every placeholder at once:
   `scripts/set-placeholders.sh <github-org> <org>.github.io/lake-meter <goatcounter-code> [formspree-endpoint]`
 
@@ -23,7 +23,7 @@ Nothing has been published, pushed, registered or paid for. Everything below is 
 
 ## 3. Visit counting (free, cookieless): GoatCounter
 1. Sign up at https://www.goatcounter.com (free, donation-supported) with the Lake email, and pick a code such as `lake-meter`.
-2. That code is `GOATCOUNTER_CODE` (the placeholder script fills it). It counts page views plus two events: install-command copies and waitlist submits. No cookies, so no consent banner.
+2. That code is `lakehq` (the placeholder script fills it). It counts page views plus two events: install-command copies and waitlist submits. No cookies, so no consent banner.
    Alternative: Cloudflare Web Analytics (also free and cookieless) if you host on Cloudflare Pages.
 
 ## 4. Waitlist (free)
@@ -48,6 +48,6 @@ Suggested order: npm + GitHub live → landing live → MCP listings → r/Claud
 
 ## 7. Five-minute check before publishing
 - [ ] `npm test` passes (38 tests; the real-Claude test runs when the Claude Code binary is installed)
-- [ ] `grep -rn "LAKE_ORG\|LAKE_SITE_URL\|GOATCOUNTER_CODE\|GITHUB_URL" --exclude=set-placeholders.sh --exclude=PUBLISH.md .` returns nothing
+- [ ] `grep -rn "getlake\|getlake.github.io/lake-meter\|lakehq\|https://github.com/getlake/lake-meter" --exclude=set-placeholders.sh --exclude=PUBLISH.md .` returns nothing
 - [ ] Record a GIF of a real session (`docs/demo-shot-list.md`) and put it at the top of the README
 - [ ] Prices in `src/prices.json` still match the two pricing pages (verified 2026-11-12)

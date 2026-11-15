@@ -8,7 +8,7 @@ document.querySelectorAll('[data-copy]').forEach((b) => {
   });
 });
 
-// Waitlist: posts to a free form backend once FORMSPREE_ENDPOINT is replaced (e.g. https://formspree.io/f/abcd1234).
+// Waitlist: posts to a free form backend once data-endpoint is set to an https form backend (e.g. a Formspree URL).
 // Until then it opens a pre-filled email to the Lake research inbox, so signups still arrive.
 const form = document.getElementById('waitlist');
 const note = document.getElementById('form-note');

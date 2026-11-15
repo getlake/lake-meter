@@ -28,6 +28,6 @@ Honest bits:
 - The cap is checked before each tool call, so a single long response can go over it.
 - No telemetry, no network calls, all data stays local. `npx lake-meter uninstall` puts your settings back exactly.
 
-Repo: GITHUB_URL
+Repo: https://github.com/getlake/lake-meter
 
 I'd really like feedback on two things: does the complexity rating match your intuition on your own plans, and which cap would you use: dollars, tokens, or 5-hour window %?
