@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>lake-meter · A model for every step, a stop for every run</title>
-<meta name="description" content="Open-source cost control for Claude Code. Per-step model recommendations with cost estimates in plan mode, a per-run cap that stops and asks, and a measured receipt when the run ends. Local only, no telemetry.">
+<meta name="description" content="A model for every step. A stop for every run. Per-step model picks in plan mode, a per-run cap that stops and asks, and a measured receipt for Claude Code. Local only, MIT.">
 <meta name="theme-color" content="#0e7c7b">
 <meta property="og:title" content="lake-meter · A model for every step, a stop for every run">
 <meta property="og:description" content="Per-step model picks and a hard per-run cap for Claude Code. One command, local only, no telemetry.">
@@ -35,7 +35,7 @@
   <nav aria-label="Main">
     <a href="#how">How it works</a>
     <a href="#honest">Honest numbers</a>
-    <a href="#pro">Pro</a>
+    <a href="#teams">Teams</a>
     <a class="btn btn-ghost" href="https://github.com/getlake/lake-meter"><svg><use href="#i-gh"/></svg>GitHub</a>
   </nav>
 </header>
@@ -46,8 +46,8 @@
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="eyebrow"><span class="rule"></span>OPEN SOURCE · CLAUDE CODE · MIT</p>
-      <h1 id="h1">A model for<br>every step.<br><span>A stop for<br>every run.</span></h1>
-      <p class="lede">lake-meter tells you which model each step of your plan actually needs, what it should cost, and stops the run when it reaches the budget you set. <strong>Before the limit is gone.</strong></p>
+      <h1 id="h1">A model for every step. <span>A stop for every run.</span></h1>
+      <p class="lede">lake-meter suggests the right model for each step of your plan, and stops the run when it reaches the budget you set. <strong>Before the limit is gone.</strong></p>
       <div class="install" role="group" aria-label="Install command">
         <code><span class="prompt">$</span> npx lake-meter init</code>
         <button class="copy" type="button" data-copy="npx lake-meter init" aria-label="Copy install command"><svg class="ic-copy"><use href="#i-copy"/></svg><svg class="ic-done"><use href="#i-check"/></svg></button>
@@ -58,14 +58,14 @@
     <div class="stage" aria-label="Product preview">
       <figure class="card plan">
         <figcaption class="card-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Ready to code? · plan mode</span><span class="tag">estimate</span></figcaption>
-        <div class="plan-sum"><span class="eyebrow">LAKE METER</span><p><b>$3.53–13.0</b> with a model per step<span class="vs">vs $3.96–14.5 all on Opus</span></p></div>
+        <div class="plan-sum"><span class="eyebrow">LAKE METER</span><p><b>A model per step</b><span class="vs">Haiku for the easy steps, Opus only where it's needed</span></p></div>
         <ol class="steps">
-          <li><span class="n">01</span><span class="t">Add retry settings to config</span><span class="lvl" data-l="1" aria-label="complexity 1 of 5"></span><span class="chip haiku">Haiku</span><span class="c">&lt;$0.01</span></li>
-          <li><span class="n">02</span><span class="t">Idempotent delivery queue</span><span class="lvl" data-l="5" aria-label="complexity 5 of 5"></span><span class="chip opus">Opus</span><span class="c">$2.10–8.22</span></li>
-          <li><span class="n">03</span><span class="t">Retry worker with backoff</span><span class="lvl" data-l="4" aria-label="complexity 4 of 5"></span><span class="chip opus">Opus</span><span class="c">$1.01–3.38</span></li>
-          <li><span class="n">04</span><span class="t">Delivery status endpoint</span><span class="lvl" data-l="3" aria-label="complexity 3 of 5"></span><span class="chip sonnet">Sonnet</span><span class="c">$0.21–0.71</span></li>
-          <li><span class="n">05</span><span class="t">Failure-path tests</span><span class="lvl" data-l="3" aria-label="complexity 3 of 5"></span><span class="chip sonnet">Sonnet</span><span class="c">$0.21–0.71</span></li>
-          <li><span class="n">06</span><span class="t">Changelog entry</span><span class="lvl" data-l="1" aria-label="complexity 1 of 5"></span><span class="chip haiku">Haiku</span><span class="c">&lt;$0.01</span></li>
+          <li><span class="n">01</span><span class="t">Add retry settings to config</span><span class="lvl" data-l="1" aria-label="complexity 1 of 5"></span><span class="chip haiku">Haiku</span><span class="c">40k–161k</span></li>
+          <li><span class="n">02</span><span class="t">Idempotent delivery queue</span><span class="lvl" data-l="5" aria-label="complexity 5 of 5"></span><span class="chip opus">Opus</span><span class="c">1.5M–6.2M</span></li>
+          <li><span class="n">03</span><span class="t">Retry worker with backoff</span><span class="lvl" data-l="4" aria-label="complexity 4 of 5"></span><span class="chip opus">Opus</span><span class="c">720k–2.6M</span></li>
+          <li><span class="n">04</span><span class="t">Delivery status endpoint</span><span class="lvl" data-l="3" aria-label="complexity 3 of 5"></span><span class="chip sonnet">Sonnet</span><span class="c">284k–1.0M</span></li>
+          <li><span class="n">05</span><span class="t">Failure-path tests</span><span class="lvl" data-l="3" aria-label="complexity 3 of 5"></span><span class="chip sonnet">Sonnet</span><span class="c">284k–1.0M</span></li>
+          <li><span class="n">06</span><span class="t">Changelog entry</span><span class="lvl" data-l="1" aria-label="complexity 1 of 5"></span><span class="chip haiku">Haiku</span><span class="c">40k–161k</span></li>
         </ol>
       </figure>
       <figure class="card cap">
@@ -76,10 +76,16 @@
       <figure class="card receipt">
         <span class="eyebrow">RECEIPT · MEASURED</span>
         <p><b>$3.44</b> · 524k tok · Opus $3.44</p>
-        <span class="sub">since plan approved $3.25 · estimate $3.53–13.0</span>
+        <span class="sub">measured from the session transcript</span>
       </figure>
     </div>
   </div>
+  <figure class="demo-reel wrap">
+    <video autoplay muted loop playsinline poster="assets/demo.jpg" aria-label="lake-meter demo: a plan split into steps with model picks, then a run stopped at the cap">
+      <source src="assets/demo.mp4" type="video/mp4">
+    </video>
+    <img class="demo-fallback" src="assets/demo.gif" alt="lake-meter demo: a plan split into steps with model picks, then a run stopped at the cap">
+  </figure>
 </section>
 
 <section class="pains wrap" aria-label="The problem">
@@ -93,7 +99,7 @@
     <article>
       <span class="num">01</span>
       <h3>Plan: a model per step</h3>
-      <p>When Claude writes a plan, lake-meter rates each step 1 to 5, picks the cheapest model that should handle it, and adds tokens and dollar ranges next to the cost of running all of it on Opus. It shows up inside Claude Code's own plan dialog.</p>
+      <p>When Claude writes a plan, lake-meter rates each step 1 to 5, picks the cheapest model that should handle it, and adds a token range for each step. It shows up inside Claude Code's own plan dialog.</p>
       <p class="fine">Two optional subagents, pinned to Haiku and Sonnet, make the advice one delegation away.</p>
     </article>
     <article>
@@ -105,7 +111,7 @@
     <article>
       <span class="num">03</span>
       <h3>After: a measured receipt</h3>
-      <p>When Claude stops, you get the run's real token count and its list-price cost, split by model and subagents, next to what the plan estimated. Your history stays in a local file for <code>lake-meter report</code>.</p>
+      <p>When Claude stops, you get the run's real token count and its list-price cost, split by model and subagents. Your history stays in a local file for <code>lake-meter report</code>.</p>
       <p class="fine">Plus a live meter in the statusline.</p>
     </article>
   </div>
@@ -129,7 +135,7 @@
 <section class="built wrap" aria-labelledby="built-h">
   <div>
     <p class="eyebrow"><span class="rule"></span>NO MAGIC</p>
-    <h2 id="built-h">Built on what Claude Code<br><span>already exposes.</span></h2>
+    <h2 id="built-h">Built on what Claude Code <span>already exposes.</span></h2>
     <p class="lede small">Four hooks, a statusline, a skill and two subagents. <code>npx lake-meter uninstall</code> restores your settings exactly. Nothing leaves your machine.</p>
   </div>
   <ul class="hooks">
@@ -142,24 +148,23 @@
   </ul>
 </section>
 
-<section id="pro" class="pro" aria-labelledby="pro-h">
+<section id="teams" class="pro" aria-labelledby="teams-h">
   <div class="wrap pro-grid">
     <div>
-      <p class="eyebrow light"><span class="rule"></span>COMING SOON</p>
-      <h2 id="pro-h">Lake Pro<br><span>for teams.</span></h2>
+      <p class="eyebrow light"><span class="rule"></span>FOR TEAMS</p>
+      <h2 id="teams-h">Running Claude Code <span>across a team?</span></h2>
       <ul class="pro-list">
-        <li><svg><use href="#i-check"/></svg>Shared budgets per repo and per teammate</li>
-        <li><svg><use href="#i-check"/></svg>A dashboard of runs by model, step and outcome</li>
-        <li><svg><use href="#i-check"/></svg>Plan approval before the expensive runs</li>
+        <li><svg><use href="#i-check"/></svg><span>Works with <a href="https://getlake.github.io/lake-gate/">lake-gate</a>: a teammate approves the plan before the expensive run</span></li>
+        <li><svg><use href="#i-check"/></svg>Early access: shared caps and a dashboard of runs by repo and model. We're talking to a few teams.</li>
       </ul>
     </div>
-    <form id="waitlist" class="waitlist" data-endpoint="" data-mailto="lake.research1@gmail.com" action="mailto:lake.research1@gmail.com?subject=lake-meter%20Pro%20waitlist" method="post" enctype="text/plain">
-      <label for="email">Join the waitlist</label>
+    <form id="waitlist" class="waitlist" data-endpoint="" data-mailto="lake.research1@gmail.com" action="mailto:lake.research1@gmail.com?subject=lake-meter%20early%20access" method="post" enctype="text/plain">
+      <label for="email">Talk to us about early access</label>
       <div class="field">
         <input id="email" name="email" type="email" required placeholder="you@company.com" autocomplete="email">
-        <button class="btn" type="submit">Join <svg><use href="#i-arrow"/></svg></button>
+        <button class="btn" type="submit">Email us <svg><use href="#i-arrow"/></svg></button>
       </div>
-      <p class="form-note" id="form-note" role="status">One email when Pro opens. No sharing, no newsletter.</p>
+      <p class="form-note" id="form-note" role="status">This opens an email to the Lake team. We only use your address to reply.</p>
     </form>
   </div>
 </section>
@@ -169,6 +174,7 @@
   <a class="brand" href="#top"><img src="assets/logo-mark.svg" alt="" width="24" height="24"><span>Lake<i>.</i></span></a>
   <span>A clear course before the code.</span>
   <span class="grow"></span>
+  <span class="tools">Lake tools · <a href="https://getlake.github.io/lake-gate/">lake-gate</a> · <a href="https://getlake.github.io/lake-meter/">lake-meter</a></span>
   <a href="https://github.com/getlake/lake-meter">GitHub</a>
   <a href="https://www.npmjs.com/package/lake-meter">npm</a>
   <span>MIT · not affiliated with Anthropic</span>

@@ -16,12 +16,7 @@ npx lake-meter init
 
 That's the whole install. Restart Claude Code (or open `/hooks`) and work as usual.
 
-If the npm package is not available yet, install from GitHub first:
-
-```bash
-npm i -g github:getlake/lake-meter
-lake-meter init
-```
+![lake-meter: a plan split into steps with model picks, then a run stopped at the cap](landing/assets/demo.gif)
 
 ---
 
@@ -154,7 +149,7 @@ Prices last verified **2026‑11‑12** from [Anthropic pricing](https://platfor
 
 ## Privacy
 
-Everything stays in `~/.lake-meter` on your machine: config, per-session counters, and a run log with token counts and dollar totals (no prompts, no code, no file names). lake-meter makes **no network requests**. There's no telemetry, opt-in or otherwise. Debugging: `touch ~/.lake-meter/debug` logs raw hook inputs locally to `~/.lake-meter/debug.jsonl`; delete the file to stop.
+Step titles are stored locally in `~/.lake-meter`, along with config and a run log of token and dollar totals. Nothing leaves the machine. No prompts or code are stored. lake-meter makes **no network requests**, and there's no telemetry. Debugging: `touch ~/.lake-meter/debug` logs raw hook inputs locally to `~/.lake-meter/debug.jsonl`; delete the file to stop.
 
 ## Verification
 
@@ -168,9 +163,9 @@ Everything stays in `~/.lake-meter` on your machine: config, per-session counter
 npm run demo        # simulated session: plan breakdown → cap prompt → receipt
 ```
 
-## Pro for teams (coming soon)
+## Teams
 
-Shared caps across a team, a dashboard of runs by repo and model, and a plan approval step before expensive runs. [Join the waitlist](https://getlake.github.io/lake-meter/#waitlist).
+Works with [lake-gate](https://getlake.github.io/lake-gate/): a teammate approves the plan before the expensive run. Shared caps and a dashboard of runs by repo and model are in early access. [Talk to us](https://getlake.github.io/lake-meter/#waitlist).
 
 ## License
 

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.getlake/lake-meter",
+  "title": "lake-meter",
+  "description": "Per-step model recommendations and cost estimates for coding-agent plans.",
+  "repository": {
+    "url": "https://github.com/getlake/lake-meter",
+    "source": "github"
+  },
+  "version": "0.1.1",
+  "websiteUrl": "https://getlake.github.io/lake-meter/",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "lake-meter",
+      "version": "0.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ]
+    }
+  ]
+}

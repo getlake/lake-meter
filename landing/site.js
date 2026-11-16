@@ -22,13 +22,13 @@ form?.addEventListener('submit', async (e) => {
     try {
       const r = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ email, source: 'lake-meter landing' }) });
       if (!r.ok) throw new Error();
-      note.textContent = "You're on the list. We'll write once, when Pro opens.";
+      note.textContent = "Your email app should open with the request ready to send.";
       form.reset();
       return;
     } catch { /* fall through to email */ }
   }
-  const subject = encodeURIComponent('lake-meter Pro waitlist');
-  const body = encodeURIComponent(`Please add me to the lake-meter Pro waitlist: ${email}`);
+  const subject = encodeURIComponent('lake-meter early access');
+  const body = encodeURIComponent(`I'd like to talk about lake-meter early access: ${email}`);
   window.location.href = `mailto:${form.dataset.mailto}?subject=${subject}&body=${body}`;
   note.textContent = 'Your email app should open with the request ready to send.';
 });
