@@ -4,7 +4,7 @@ import { loadPrices } from './pricing.js';
 import { analyzePlan } from './plan.js';
 import { planTable, runSummary, usd } from './format.js';
 import { onUserPromptSubmit, onPreToolUse, onPostToolUse, onStop, onStatusLine, effectiveCaps } from './hooks.js';
-import { loadConfig, saveUserConfig, loadSession, latestSessionId, readRuns, home, parseCapUsd } from './state.js';
+import { loadConfig, saveUserConfig, loadSession, latestSessionId, readRuns, uniqueRuns, home, parseCapUsd } from './state.js';
 import { totals } from './transcript.js';
 import { init, uninstall } from './init.js';
 import { serve } from './mcp.js';
@@ -61,7 +61,7 @@ function setCap(v) {
 }
 
 function report() {
-  const runs = readRuns().slice(-15);
+  const runs = uniqueRuns(readRuns()).slice(-15);
   if (!runs.length) return 'No finished runs yet.';
   const lines = ['Lake Meter · last runs (measured tokens, list-price $)', ''];
   for (const r of runs) {

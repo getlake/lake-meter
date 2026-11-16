@@ -9,6 +9,21 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 const UNATTENDED_MODES = new Set(['bypassPermissions', 'dontAsk']);
 
+function defaultWarn(msg) {
+  process.stderr.write(msg.endsWith('\n') ? msg : msg + '\n');
+}
+
+/** Load config and, once per session, return a user-visible notice for parse/validation warnings (M-22). */
+function loadConfigNotices(cwd, s) {
+  const warnings = [];
+  const cfg = loadConfig(cwd, (m) => { defaultWarn(m); warnings.push(m); });
+  if (!warnings.length) return { cfg, notice: null };
+  if (s.configNoticeShown) return { cfg, notice: null };
+  s.configNoticeShown = true;
+  return { cfg, notice: warnings.join('\n') };
+}
+
+
 function ensureRun(s, now) {
   if (!s.run) s.run = { start: 0, seen: {}, extraUsd: 0, extraTokens: 0, capHits: 0, warned: false, pendingAsk: null, startedAt: now };
   return s.run;
@@ -123,8 +138,8 @@ export function onUserPromptSubmit(input) {
 
 /** PreToolUse (all tools): enforce the cap; on ExitPlanMode also produce the plan breakdown. */
 export function onPreToolUse(input, prices = loadPrices()) {
-  const cfg = loadConfig(input.cwd);
   const s = loadSession(input.session_id);
+  const { cfg, notice } = loadConfigNotices(input.cwd, s);
   const t = refresh(s, input, prices);
   const run = s.run;
   const out = { hookSpecificOutput: { hookEventName: 'PreToolUse' } };
@@ -153,6 +168,8 @@ export function onPreToolUse(input, prices = loadPrices()) {
     const unattended = cfg.onCap === 'stop' || UNATTENDED_MODES.has(input.permission_mode);
     if (unattended) {
       const pause = pauseMessage(hit);
+      // continue:false is required to end the turn. Without it, bypass mode keeps
+      // calling tools and -p result is "Done.", not the pause line (M-26 / Claude Code).
       out.continue = false;
       out.stopReason = `${pause}. Reply "continue" to start a new run, or raise the cap with /meter cap <usd>.`;
       // permissionDecision: deny is what actually blocks the tool in unattended modes.
@@ -160,7 +177,8 @@ export function onPreToolUse(input, prices = loadPrices()) {
       out.hookSpecificOutput.permissionDecision = 'deny';
       out.hookSpecificOutput.permissionDecisionReason = pause;
       out.systemMessage = `${pause}\n${runSummary(t, { cap: caps.usd ?? caps.sessionUsd, capHits: run.capHits })}`;
-      appendRun({ session: input.session_id, start: run.start || null, end: Date.now(), usd: +t.usd.toFixed(4), tokens: t.tokens, output: t.output, cacheRead: t.cacheRead, requests: t.requests, byModel: t.byModel, subagentUsd: +t.subagent.usd.toFixed(4), capUsd: caps.usd, capHits: run.capHits, stoppedByCap: true });
+      if (appendRun({ session: input.session_id, start: run.start || null, end: Date.now(), usd: +t.usd.toFixed(4), tokens: t.tokens, output: t.output, cacheRead: t.cacheRead, requests: t.requests, byModel: t.byModel, subagentUsd: +t.subagent.usd.toFixed(4), capUsd: caps.usd, capHits: run.capHits, stoppedByCap: true }))
+        run.logged = true;
     } else {
       run.pendingAsk = input.tool_use_id || 'pending';
       run.pendingAskKind = hit.kind;
@@ -173,6 +191,7 @@ export function onPreToolUse(input, prices = loadPrices()) {
     ctx.push(`Run spend is at ${Math.round((t.usd / caps.usd) * 100)}% of the user's per-run budget of ${usd(caps.usd)}. Tool calls will need the user's approval once it is reached.`);
   }
 
+  if (notice) msgs.push(notice);
   saveSession(s);
   if (ctx.length) out.hookSpecificOutput.additionalContext = ctx.join('\n');
   if (msgs.length) out.systemMessage = (out.systemMessage ? out.systemMessage + '\n\n' : '') + msgs.join('\n\n');
@@ -243,8 +262,8 @@ export function onPostToolUse(input, prices = loadPrices()) {
 /** Stop: end-of-run summary (shown to the user, never blocks). */
 export async function onStop(input, prices = loadPrices(), { settleMs = 300 } = {}) {
   if (settleMs) await new Promise((r) => setTimeout(r, settleMs)); // transcript is written asynchronously
-  const cfg = loadConfig(input.cwd);
   const s = loadSession(input.session_id);
+  const { cfg, notice } = loadConfigNotices(input.cwd, s);
   const t = refresh(s, input, prices);
   const run = s.run;
   let plan = null;
@@ -255,11 +274,17 @@ export async function onStop(input, prices = loadPrices(), { settleMs = 300 } = 
   }
   const caps = effectiveCaps(cfg, run, s);
   const summary = runSummary(t, { cap: caps.usd, capHits: run.capHits, plan });
-  appendRun({ session: input.session_id, start: run.start || null, end: Date.now(), usd: +t.usd.toFixed(4), tokens: t.tokens, output: t.output, cacheRead: t.cacheRead, requests: t.requests, byModel: t.byModel, subagentUsd: +t.subagent.usd.toFixed(4), capUsd: caps.usd, capHits: run.capHits, plan, statuslineSessionUsd: s.statusline?.costUsd ?? null });
+  const record = { session: input.session_id, start: run.start || null, end: Date.now(), usd: +t.usd.toFixed(4), tokens: t.tokens, output: t.output, cacheRead: t.cacheRead, requests: t.requests, byModel: t.byModel, subagentUsd: +t.subagent.usd.toFixed(4), capUsd: caps.usd, capHits: run.capHits, plan, statuslineSessionUsd: s.statusline?.costUsd ?? null };
+  // /meter and a second Stop after an unattended cap must not record or re-print the receipt (M-23).
+  if (run.logged || appendRun(record) === false) {
+    saveSession(s);
+    return notice ? { systemMessage: notice } : null;
+  }
+  run.logged = true;
   s.lastRun = { usd: t.usd, tokens: t.tokens, end: Date.now() };
   saveSession(s);
-  if (!t.requests) return null;
-  return { systemMessage: summary };
+  if (!t.requests) return notice ? { systemMessage: notice } : null;
+  return { systemMessage: [summary, notice].filter(Boolean).join('\n\n') };
 }
 
 /** statusLine command: show the meter, and keep Claude Code's own session cost + rate-limit % for cap checks. */

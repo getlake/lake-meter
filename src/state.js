@@ -164,14 +164,11 @@ export function saveUserConfig(patch, warn = defaultWarn) {
     try {
       cur = JSON.parse(readFileSync(p, 'utf8'));
     } catch (err) {
-      const msg = `lake-meter: refusing to overwrite unparseable ${p}: ${err.message}. Fix or remove the file, then retry.`;
-      warn(msg);
-      throw new Error(msg);
+      // Throw only (no warn): callers print the message once (M-25).
+      throw new Error(`lake-meter: refusing to overwrite unparseable ${p}: ${err.message}. Fix or remove the file, then retry.`);
     }
     if (cur == null || typeof cur !== 'object' || Array.isArray(cur)) {
-      const msg = `lake-meter: refusing to overwrite ${p}: expected a JSON object.`;
-      warn(msg);
-      throw new Error(msg);
+      throw new Error(`lake-meter: refusing to overwrite ${p}: expected a JSON object.`);
     }
   }
   writeJsonAtomic(p, { ...cur, ...patch });
@@ -204,9 +201,34 @@ export function latestSessionId() {
   return best;
 }
 
+/** Identity of a recorded run: same session + same run start ⇒ the same run (M-23). */
+export function runKey(record) {
+  if (record?.session && record.start) return `${record.session}:${record.start}`;
+  return null;
+}
+
+/** Dedupe by session+start so /meter or a later Stop cannot double-count the same run. Returns false if skipped. */
 export function appendRun(record) {
+  const key = runKey(record);
+  if (key && readRuns().some((r) => runKey(r) === key)) return false;
   mkdirSync(home(), { recursive: true });
   appendFileSync(join(home(), 'runs.jsonl'), JSON.stringify(record) + '\n');
+  return true;
+}
+
+/** First occurrence of each session+start, in file order (the original Stop, not a later /meter recopy). */
+export function uniqueRuns(runs) {
+  const seen = new Set();
+  const out = [];
+  for (const r of runs) {
+    const k = runKey(r);
+    if (k) {
+      if (seen.has(k)) continue;
+      seen.add(k);
+    }
+    out.push(r);
+  }
+  return out;
 }
 
 export function readRuns() {

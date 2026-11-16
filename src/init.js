@@ -40,6 +40,19 @@ export function installRuntime() {
   return join(rt, 'bin', 'lake-meter.js');
 }
 
+
+/** Cap display: $1,000.50 (not $1000.5). */
+function formatCapUsd(n) {
+  if (n == null) return 'off';
+  const [ints, frac] = Number(n).toFixed(2).split('.');
+  return `$${ints.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${frac}`;
+}
+function capExample(n) {
+  if (n == null) return '10';
+  const v = Number(n);
+  return Number.isInteger(v) ? String(v) : v.toFixed(2);
+}
+
 export function init(opts = {}) {
   const log = opts.log || console.log;
   const node = opts.node || process.execPath;
@@ -106,7 +119,8 @@ You implement one step of an approved plan. Stay inside the step's scope, follow
   log(`✓ Lake Meter installed in ${t.settings}`);
   log(`  hooks: UserPromptSubmit, PreToolUse, PostToolUse, Stop · ${statusNote}`);
   log(`  /meter skill: ${t.skillDir}${opts.agents !== false ? ` · subagents lake-light (haiku), lake-standard (sonnet) in ${t.agentsDir}` : ''}`);
-  log(`  per-run cap: ${'$'}${opts.capUsd ?? JSON.parse(readFileSync(join(home(), 'config.json'), 'utf8')).capUsd} (change with: npx lake-meter cap 10)`);
+  const capVal = opts.capUsd ?? JSON.parse(readFileSync(join(home(), 'config.json'), 'utf8')).capUsd;
+  log(`  per-run cap: ${formatCapUsd(capVal)} (change with: npx lake-meter cap ${capExample(capVal)})`);
   log('  Restart Claude Code (or open /hooks) to load it. No data leaves your machine.');
   return t;
 }

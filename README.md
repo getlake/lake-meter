@@ -168,7 +168,7 @@ Step titles are stored locally in `~/.lake-meter`, along with config and a run l
 
 ## Verification
 
-- `npm test`: 48 tests (pricing math, transcript parsing and de-duplication, plan splitting and scoring, every hook path, install/uninstall round-trip, MCP over stdio, a simulated session through the real CLI).
+- `npm test`: 54 tests (pricing math, transcript parsing and de-duplication, plan splitting and scoring, every hook path, install/uninstall round-trip, MCP over stdio, a simulated session through the real CLI).
 - `test/real-claude.test.js` runs the **real Claude Code binary** (2.1.322 at time of writing) against a local mock of the Messages API (`scripts/mock-anthropic.js`, no account needed). It checks that the hooks fire, the cap produces a permission decision, `bypassPermissions` stops the turn, and that lake-meter's measured run cost equals Claude Code's own `total_cost_usd`. Skipped when no Claude Code binary is installed.
 - The screens in [What you see](#what-you-see) were captured from an interactive Claude Code session driven against the same mock.
 

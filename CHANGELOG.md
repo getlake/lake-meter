@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3 (2026-11-16)
+- `/meter` after a finished run no longer records that run a second time (`report` no longer double-counts)
+- An unattended cap stop still ends the turn and records once; a later Stop hook does not add a duplicate row
+- A typo in `config.json` now appears as a hook system message inside Claude Code, not only on hook stderr
+- `init` cap hint uses the cap you set and formats `$1,000.50`
+- `cap` on a broken config prints the error once
+
+
 ## 0.1.2 (2026-11-16)
 - `/meter` no longer resets the current run (it was showing $0.00)
 - `init --cap '$10'` and `cap '$10'` parse as $10; invalid values exit non-zero and do not disable the cap
