@@ -157,11 +157,11 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .pro-list a:hover{color:#fff}
 .pro-list svg{color:var(--teal-5)}
 .waitlist{background:rgb(255 255 255/.06);border:1px solid rgb(255 255 255/.14);border-radius:20px;padding:30px}
-.waitlist label{display:block;font-size:20px;font-weight:600;color:#fff;letter-spacing:-.02em;margin-bottom:16px}
+.waitlist label,.waitlist-title{display:block;font-size:20px;font-weight:600;color:#fff;letter-spacing:-.02em;margin:0 0 16px}
 .field{display:flex;gap:10px}
 .field input{flex:1;min-width:0;min-height:50px;border-radius:12px;border:1px solid rgb(255 255 255/.2);background:rgb(255 255 255/.95);padding:0 16px;font:inherit;font-size:15px;color:var(--ink)}
-.field .btn{min-height:50px;background:var(--teal-5);border-color:var(--teal-5);color:#06323b}
-.field .btn:hover{background:var(--teal-3)}
+.field .btn,.waitlist .btn{min-height:50px;background:var(--teal-5);border-color:var(--teal-5);color:#06323b}
+.field .btn:hover,.waitlist .btn:hover{background:var(--teal-3)}
 .form-note{font-size:13px;color:#9cc2bf;margin-top:12px}
 
 /* footer */
@@ -202,3 +202,12 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 @media (max-width:720px){.demo-reel{margin-top:40px}.demo-reel video,.demo-reel img{border-radius:14px}}
 .demo-reel .demo-fallback{display:none}
 @media (prefers-reduced-motion:reduce){.demo-reel video{display:none}.demo-reel .demo-fallback{display:block}}
+
+/* A/B hero variants (see the inline script in index.html) */
+.hero h1.h1-balance{text-wrap:balance;max-width:12ch}
+.cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:16px}
+.cta-copy svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+.cta-copy .when-done{display:none}.cta-copy.done .when-idle{display:none}.cta-copy.done .when-done{display:inline}
+.cta-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:14px;font-weight:600;color:var(--teal)}
+.cta-link svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+.cta-link:hover{color:var(--teal-d)}

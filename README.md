@@ -165,7 +165,7 @@ npm run demo        # simulated session: plan breakdown → cap prompt → recei
 
 ## Teams
 
-Works with [lake-gate](https://getlake.github.io/lake-gate/): a teammate approves the plan before the expensive run. Shared caps and a dashboard of runs by repo and model are in early access. [Talk to us](https://getlake.github.io/lake-meter/#waitlist).
+Works with [lake-gate](https://getlake.github.io/lake-gate/): a teammate approves the plan before the expensive run. Shared caps and a dashboard of runs by repo and model are in early access. [Request a team pilot](https://getlake.github.io/lake-meter/#waitlist).
 
 ## License
 

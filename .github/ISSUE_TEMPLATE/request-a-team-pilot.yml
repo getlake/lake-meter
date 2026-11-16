@@ -1,0 +1,44 @@
+name: Request a team pilot
+description: Tell Lake you'd like to run lake-meter with your team. We'll reply on the issue.
+title: "Request a team pilot"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying lake-meter. A short note is enough — we'll reply on this issue.
+  - type: input
+    id: team
+    attributes:
+      label: Team or company
+      placeholder: Acme
+  - type: dropdown
+    id: size
+    attributes:
+      label: Team size
+      options:
+        - 2–4
+        - 5–15
+        - 16–50
+        - 50+
+        - Prefer not to say
+  - type: input
+    id: agents
+    attributes:
+      label: Agents you use
+      description: Claude Code, Cursor, or others.
+      placeholder: Claude Code, Cursor
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: What you'd like to try
+      description: A sentence or two on the pain (run limits, model choice, team caps) is plenty.
+    validations:
+      required: true
+  - type: input
+    id: contact
+    attributes:
+      label: How should we reach you
+      description: Optional. We'll reply on this issue either way.
+      placeholder: email or Slack

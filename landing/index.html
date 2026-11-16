@@ -14,6 +14,20 @@
 <link rel="icon" href="assets/logo-mark.svg">
 <link rel="preload" href="assets/inter.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<!-- A/B (lake-meter landing): assign buckets before first paint. Remove this block and the .ab-* markup to end the tests. -->
+<script>
+(function(){var d=document.documentElement,s=location.search,all=s.match(/[?&]ab=([ab])(?:&|$)/),qa=false;
+['h1','cta'].forEach(function(t){var k='lake_ab_meter_'+t,v=null,o=s.match(new RegExp('[?&]ab_'+t+'=([ab])(?:&|$)'));
+ if(o||all){v=(o||all)[1];qa=true}
+ else{try{v=localStorage.getItem(k)}catch(e){}
+  if(v!=='a'&&v!=='b'){v=Math.random()<0.5?'a':'b';try{localStorage.setItem(k,v)}catch(e){}}}
+ d.setAttribute('data-ab-'+t,v)});
+if(qa)d.setAttribute('data-ab-qa','1')})();
+</script>
+<style>
+html:not([data-ab-h1=b]) .ab-h1-b,html[data-ab-h1=b] .ab-h1-a,
+html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!important}
+</style>
 <script src="site.js" defer></script>
 <!-- Visit counting: GoatCounter (free, cookieless, no consent banner needed). Site code: lakehq. -->
 <script data-goatcounter="https://lakehq.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
@@ -41,16 +55,26 @@
 </header>
 
 <main id="top">
-<section class="hero" aria-labelledby="h1">
+<section class="hero" aria-label="lake-meter">
   <img class="scene" src="assets/lake-editorial-scene.svg" alt="" fetchpriority="high">
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="eyebrow"><span class="rule"></span>OPEN SOURCE · CLAUDE CODE · MIT</p>
-      <h1 id="h1">A model for every step. <span>A stop for every run.</span></h1>
-      <p class="lede">lake-meter suggests the right model for each step of your plan, and stops the run when it reaches the budget you set. <strong>Before the limit is gone.</strong></p>
+      <div class="ab-h1-a">
+        <h1 id="h1">A model for every step. <span>A stop for every run.</span></h1>
+        <p class="lede">lake-meter suggests the right model for each step of your plan, and stops the run when it reaches the budget you set. <strong>Before the limit is gone.</strong></p>
+      </div>
+      <div class="ab-h1-b">
+        <h1 id="h1-b" class="h1-balance">A run budget for Claude Code <span>that stops and asks.</span></h1>
+        <p class="lede">Set a budget for each run. When Claude Code reaches it, the next tool call asks you before it spends more. Every step of your plan also gets a recommended model. <strong>Before the limit is gone.</strong></p>
+      </div>
       <div class="install" role="group" aria-label="Install command">
         <code><span class="prompt">$</span> npx lake-meter init</code>
-        <button class="copy" type="button" data-copy="npx lake-meter init" aria-label="Copy install command"><svg class="ic-copy"><use href="#i-copy"/></svg><svg class="ic-done"><use href="#i-check"/></svg></button>
+        <button class="copy" type="button" data-copy="npx lake-meter init" data-ab-target="copy" aria-label="Copy install command"><svg class="ic-copy"><use href="#i-copy"/></svg><svg class="ic-done"><use href="#i-check"/></svg></button>
+      </div>
+      <div class="cta-row ab-cta-b">
+        <button class="btn cta-copy" type="button" data-copy="npx lake-meter init" data-ab-target="copy-button"><span class="when-idle">Copy install command</span><span class="when-done">Copied. Paste it in your terminal</span><svg><use href="#i-copy"/></svg></button>
+        <a class="cta-link" href="https://github.com/getlake/lake-meter#readme" data-ab-target="github">Read the README on GitHub <svg><use href="#i-up"/></svg></a>
       </div>
       <p class="micro">One command. Local only. No account, no telemetry.<br>Uses Claude Code's own hooks, statusline and plan dialog.</p>
     </div>
@@ -158,14 +182,11 @@
         <li><svg><use href="#i-check"/></svg>Early access: shared caps and a dashboard of runs by repo and model. We're talking to a few teams.</li>
       </ul>
     </div>
-    <form id="waitlist" class="waitlist" data-endpoint="" data-mailto="lake.research1@gmail.com" action="mailto:lake.research1@gmail.com?subject=lake-meter%20early%20access" method="post" enctype="text/plain">
-      <label for="email">Talk to us about early access</label>
-      <div class="field">
-        <input id="email" name="email" type="email" required placeholder="you@company.com" autocomplete="email">
-        <button class="btn" type="submit">Email us <svg><use href="#i-arrow"/></svg></button>
-      </div>
-      <p class="form-note" id="form-note" role="status">This opens an email to the Lake team. We only use your address to reply.</p>
-    </form>
+    <aside class="waitlist" id="waitlist">
+      <p class="waitlist-title">Request a team pilot</p>
+      <a class="btn" href="https://github.com/getlake/lake-meter/issues/new?template=request-a-team-pilot.yml" data-team-pilot>Request a team pilot <svg><use href="#i-arrow"/></svg></a>
+      <p class="form-note">Opens a short GitHub issue. We only use it to reply.</p>
+    </aside>
   </div>
 </section>
 </main>
