@@ -7,13 +7,13 @@
     "url": "https://github.com/getlake/lake-meter",
     "source": "github"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "websiteUrl": "https://getlake.github.io/lake-meter/",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "lake-meter",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "transport": {
         "type": "stdio"
       },

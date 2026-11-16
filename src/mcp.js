@@ -1,6 +1,7 @@
 // Minimal MCP server over stdio (JSON-RPC 2.0, newline-delimited), no dependencies.
 // Tools: estimate_plan (any MCP client: Claude Code, Cursor, ...) and meter_status (Claude Code sessions).
 import { createInterface } from 'node:readline';
+import { readFileSync } from 'node:fs';
 import { loadPrices } from './pricing.js';
 import { analyzePlan } from './plan.js';
 import { planMarkdown, runSummary } from './format.js';
@@ -32,7 +33,7 @@ export function handle(msg, prices = loadPrices()) {
   const { id, method, params } = msg;
   const ok = (result) => ({ jsonrpc: '2.0', id, result });
   if (method === 'initialize') {
-    return ok({ protocolVersion: params?.protocolVersion || '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'lake-meter', version: '0.1.0' } });
+    return ok({ protocolVersion: params?.protocolVersion || '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'lake-meter', version: JSON.parse(readFileSync(new URL('../package.json', import.meta.url))).version } });
   }
   if (method === 'notifications/initialized' || id === undefined) return null;
   if (method === 'ping') return ok({});

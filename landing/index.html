@@ -124,7 +124,7 @@ html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!i
       <span class="num">01</span>
       <h3>Plan: a model per step</h3>
       <p>When Claude writes a plan, lake-meter rates each step 1 to 5, picks the cheapest model that should handle it, and adds a token range for each step. It shows up inside Claude Code's own plan dialog.</p>
-      <p class="fine">Two optional subagents, pinned to Haiku and Sonnet, make the advice one delegation away.</p>
+      <p class="fine">Two subagents, pinned to Haiku and Sonnet, make the advice one delegation away (skip them with <code>--no-agents</code>).</p>
     </article>
     <article>
       <span class="num">02</span>
@@ -135,7 +135,7 @@ html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!i
     <article>
       <span class="num">03</span>
       <h3>After: a measured receipt</h3>
-      <p>When Claude stops, you get the run's real token count and its list-price cost, split by model and subagents. Your history stays in a local file for <code>lake-meter report</code>.</p>
+      <p>When Claude stops, you get the run's real token count and its list-price cost, split by model and subagents. Your history stays in a local file for <code>npx lake-meter report</code>.</p>
       <p class="fine">Plus a live meter in the statusline.</p>
     </article>
   </div>

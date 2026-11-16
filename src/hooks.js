@@ -31,25 +31,77 @@ export function refresh(s, input, prices) {
   return totals(run.seen, prices);
 }
 
-export function effectiveCaps(cfg, run) {
+export function effectiveCaps(cfg, run, s = {}) {
   return {
-    usd: cfg.capUsd != null ? cfg.capUsd + (run.extraUsd || 0) : null,
-    tokens: cfg.capTokens != null ? cfg.capTokens + (run.extraTokens || 0) : null,
-    fiveHourPct: cfg.capFiveHourPct != null ? cfg.capFiveHourPct + (run.extraPct || 0) : null,
+    usd: cfg.capUsd != null ? cfg.capUsd + (run?.extraUsd || 0) : null,
+    tokens: cfg.capTokens != null ? cfg.capTokens + (run?.extraTokens || 0) : null,
+    fiveHourPct: cfg.capFiveHourPct != null ? cfg.capFiveHourPct + (run?.extraPct || 0) : null,
+    sessionUsd: cfg.sessionCapUsd != null ? cfg.sessionCapUsd + (s.extraSessionUsd || 0) : null,
   };
 }
 
-function overCap(t, caps, s, cfg) {
-  if (caps.usd != null && t.usd >= caps.usd) return `this run has used about ${usd(t.usd)} (cap ${usd(caps.usd)})`;
-  if (caps.tokens != null && t.tokens >= caps.tokens) return `this run has used ${Math.round(t.tokens / 1000)}k tokens (cap ${Math.round(caps.tokens / 1000)}k)`;
+function overCap(t, caps, s) {
+  if (caps.usd != null && t.usd >= caps.usd)
+    return { kind: 'usd', reason: `this run has used about ${usd(t.usd)} (cap ${usd(caps.usd)})`, amount: t.usd, cap: caps.usd };
+  if (caps.tokens != null && t.tokens >= caps.tokens)
+    return { kind: 'tokens', reason: `this run has used ${Math.round(t.tokens / 1000)}k tokens (cap ${Math.round(caps.tokens / 1000)}k)`, amount: t.tokens, cap: caps.tokens };
   const sl = s.statusline;
   if (caps.fiveHourPct != null && sl?.fiveHourPct != null && Date.now() - sl.at < 10 * 60e3 && sl.fiveHourPct >= caps.fiveHourPct)
-    return `your 5-hour usage window is at ${Math.round(sl.fiveHourPct)}% (cap ${caps.fiveHourPct}%)`;
-  if (cfg.sessionCapUsd != null && s.sessionUsd != null && s.sessionUsd >= cfg.sessionCapUsd) return `this session has used about ${usd(s.sessionUsd)} (session cap ${usd(cfg.sessionCapUsd)})`;
+    return { kind: 'fiveHour', reason: `your 5-hour usage window is at ${Math.round(sl.fiveHourPct)}% (cap ${Math.round(caps.fiveHourPct)}%)`, amount: sl.fiveHourPct, cap: caps.fiveHourPct };
+  if (caps.sessionUsd != null && s.sessionUsd != null && s.sessionUsd >= caps.sessionUsd)
+    return { kind: 'session', reason: `this session has used about ${usd(s.sessionUsd)} (session cap ${usd(caps.sessionUsd)})`, amount: s.sessionUsd, cap: caps.sessionUsd };
   return null;
 }
 
-/** UserPromptSubmit: a new run starts. */
+function headroomLabel(hit, cfg) {
+  const pct = cfg.extendPct;
+  if (hit.kind === 'usd' && cfg.capUsd != null) return usd(cfg.capUsd * pct / 100);
+  if (hit.kind === 'session' && cfg.sessionCapUsd != null) return usd(cfg.sessionCapUsd * pct / 100);
+  if (hit.kind === 'tokens' && cfg.capTokens != null) return `${Math.round(cfg.capTokens * pct / 100 / 1000)}k tokens`;
+  return `${pct}%`;
+}
+
+/** Exact user-facing pause line. Do not wrap this in hook-error language. */
+export function pauseMessage(hit) {
+  if (hit.kind === 'usd' || hit.kind === 'session')
+    return `Lake Meter paused the run at ${usd(hit.amount)} (cap ${usd(hit.cap)})`;
+  if (hit.kind === 'tokens')
+    return `Lake Meter paused the run at ${Math.round(hit.amount / 1000)}k tokens (cap ${Math.round(hit.cap / 1000)}k)`;
+  if (hit.kind === 'fiveHour')
+    return `Lake Meter paused the run at ${Math.round(hit.amount)}% of the 5-hour window (cap ${Math.round(hit.cap)}%)`;
+  return `Lake Meter paused the run: ${hit.reason}`;
+}
+
+function applyHeadroom(cfg, run, s, t, kinds) {
+  const pct = cfg.extendPct / 100;
+  for (const kind of kinds) {
+    if (kind === 'usd' && cfg.capUsd != null) {
+      const target = Math.max(t.usd, cfg.capUsd + (run.extraUsd || 0)) + cfg.capUsd * pct;
+      run.extraUsd = target - cfg.capUsd;
+    }
+    if (kind === 'tokens' && cfg.capTokens != null) {
+      run.extraTokens = Math.max(t.tokens, cfg.capTokens + (run.extraTokens || 0)) + cfg.capTokens * pct - cfg.capTokens;
+    }
+    if (kind === 'fiveHour' && cfg.capFiveHourPct != null) {
+      run.extraPct = Math.max(0, (s.statusline?.fiveHourPct ?? cfg.capFiveHourPct) - cfg.capFiveHourPct) + 5;
+    }
+    if (kind === 'session' && cfg.sessionCapUsd != null) {
+      const current = cfg.sessionCapUsd + (s.extraSessionUsd || 0);
+      const target = Math.max(s.sessionUsd ?? 0, current) + cfg.sessionCapUsd * pct;
+      s.extraSessionUsd = target - cfg.sessionCapUsd;
+    }
+  }
+}
+
+/** /meter (and /meter status, /meter cap, …) is itself a UserPromptSubmit; it must not start a new run. */
+export function isMeterCommand(prompt) {
+  const p = String(prompt || '').trim();
+  if (/^\/meter\b/i.test(p)) return true;
+  if (/<(?:command-name|command_name)>\s*\/?meter\b/i.test(p)) return true;
+  return false;
+}
+
+/** UserPromptSubmit: a new run starts, unless this prompt is the /meter slash command. */
 export function onUserPromptSubmit(input) {
   const s = loadSession(input.session_id);
   if (input.transcript_path) s.transcriptPath = input.transcript_path;
@@ -59,9 +111,12 @@ export function onUserPromptSubmit(input) {
     const { entries, offset } = scanFile(f, s.offsets[f] || 0);
     s.offsets[f] = offset;
     absorb((s.sessionSeen ||= {}), entries, 0);
+    if (s.run) absorb(s.run.seen, entries, s.run.start);
   }
-  const now = Date.now();
-  s.run = { start: now, seen: {}, extraUsd: 0, extraTokens: 0, extraPct: 0, capHits: 0, warned: false, pendingAsk: null, startedAt: now };
+  if (!isMeterCommand(input.prompt)) {
+    const now = Date.now();
+    s.run = { start: now, seen: {}, extraUsd: 0, extraTokens: 0, extraPct: 0, capHits: 0, warned: false, pendingAsk: null, pendingAskKind: null, startedAt: now };
+  }
   saveSession(s);
   return null;
 }
@@ -90,22 +145,27 @@ export function onPreToolUse(input, prices = loadPrices()) {
     }
   }
 
-  const caps = effectiveCaps(cfg, run);
-  const reason = overCap(t, caps, s, cfg);
-  if (reason) {
+  const caps = effectiveCaps(cfg, run, s);
+  const hit = overCap(t, caps, s);
+  if (hit) {
     run.capHits++;
-    const ext = cfg.capUsd != null ? usd(cfg.capUsd * cfg.extendPct / 100) : `${cfg.extendPct}%`;
+    const ext = headroomLabel(hit, cfg);
     const unattended = cfg.onCap === 'stop' || UNATTENDED_MODES.has(input.permission_mode);
     if (unattended) {
+      const pause = pauseMessage(hit);
       out.continue = false;
-      out.stopReason = `Lake Meter paused the run: ${reason}. Reply "continue" to start a new run, or raise the cap with /meter cap <usd>.`;
+      out.stopReason = `${pause}. Reply "continue" to start a new run, or raise the cap with /meter cap <usd>.`;
+      // permissionDecision: deny is what actually blocks the tool in unattended modes.
+      // The reason must be the clear pause line — not "hook error" / "the user has been asked".
       out.hookSpecificOutput.permissionDecision = 'deny';
-      out.hookSpecificOutput.permissionDecisionReason = `Lake Meter cap reached: ${reason}. The user has been asked how to proceed. Stop and wait for the user.`;
+      out.hookSpecificOutput.permissionDecisionReason = pause;
+      out.systemMessage = `${pause}\n${runSummary(t, { cap: caps.usd ?? caps.sessionUsd, capHits: run.capHits })}`;
       appendRun({ session: input.session_id, start: run.start || null, end: Date.now(), usd: +t.usd.toFixed(4), tokens: t.tokens, output: t.output, cacheRead: t.cacheRead, requests: t.requests, byModel: t.byModel, subagentUsd: +t.subagent.usd.toFixed(4), capUsd: caps.usd, capHits: run.capHits, stoppedByCap: true });
     } else {
       run.pendingAsk = input.tool_use_id || 'pending';
+      run.pendingAskKind = hit.kind;
       out.hookSpecificOutput.permissionDecision = 'ask';
-      out.hookSpecificOutput.permissionDecisionReason = `Lake Meter: ${reason}. Approve to continue with +${ext} headroom. Deny to stop here. Or run /meter cap <usd> to set a new cap.`;
+      out.hookSpecificOutput.permissionDecisionReason = `Lake Meter: ${hit.reason}. Approve to continue with +${ext} headroom. Deny to stop here. Or run /meter cap <usd> to set a new cap.`;
     }
   } else if (!run.warned && caps.usd && t.usd >= caps.usd * (cfg.warnPct / 100)) {
     run.warned = true;
@@ -115,7 +175,7 @@ export function onPreToolUse(input, prices = loadPrices()) {
 
   saveSession(s);
   if (ctx.length) out.hookSpecificOutput.additionalContext = ctx.join('\n');
-  if (msgs.length) out.systemMessage = msgs.join('\n\n');
+  if (msgs.length) out.systemMessage = (out.systemMessage ? out.systemMessage + '\n\n' : '') + msgs.join('\n\n');
   const hso = out.hookSpecificOutput;
   if (!out.systemMessage && !hso.additionalContext && !hso.permissionDecision && out.continue === undefined) return null;
   return out;
@@ -163,13 +223,18 @@ export function onPostToolUse(input, prices = loadPrices()) {
   if (run.pendingAsk !== 'pending' && input.tool_use_id && input.tool_use_id !== run.pendingAsk) return null;
   const cfg = loadConfig(input.cwd);
   const t = totals(run.seen, prices);
-  if (cfg.capUsd != null) {
-    const target = Math.max(t.usd, cfg.capUsd + run.extraUsd) + cfg.capUsd * cfg.extendPct / 100;
-    run.extraUsd = target - cfg.capUsd;
+  // Session totals may have been computed on the last PreToolUse; keep them current if we have statusline/sessionSeen.
+  if (s.sessionUsd == null && s.sessionSeen) {
+    try { s.sessionUsd = totals(s.sessionSeen, prices).usd; } catch { /* ignore */ }
   }
-  if (cfg.capTokens != null) run.extraTokens = Math.max(t.tokens, cfg.capTokens + run.extraTokens) + cfg.capTokens * cfg.extendPct / 100 - cfg.capTokens;
-  if (cfg.capFiveHourPct != null) run.extraPct = Math.max(0, (s.statusline?.fiveHourPct ?? cfg.capFiveHourPct) - cfg.capFiveHourPct) + 5;
+  const kinds = new Set();
+  if (run.pendingAskKind) kinds.add(run.pendingAskKind);
+  const still = overCap(t, effectiveCaps(cfg, run, s), s);
+  if (still) kinds.add(still.kind);
+  if (!kinds.size && cfg.capUsd != null) kinds.add('usd');
+  applyHeadroom(cfg, run, s, t, kinds);
   run.pendingAsk = null;
+  run.pendingAskKind = null;
   run.warned = true; // the user just chose to continue; no extra heads-up for this extension
   saveSession(s);
   return null;
@@ -188,7 +253,7 @@ export async function onStop(input, prices = loadPrices(), { settleMs = 300 } = 
     for (const f of sessionFiles(s.transcriptPath)) absorb(seen, scanFile(f, 0).entries, s.plan.createdAt);
     plan = { actualUsd: totals(seen, prices).usd, estimateUsd: s.plan.estimateUsd };
   }
-  const caps = effectiveCaps(cfg, run);
+  const caps = effectiveCaps(cfg, run, s);
   const summary = runSummary(t, { cap: caps.usd, capHits: run.capHits, plan });
   appendRun({ session: input.session_id, start: run.start || null, end: Date.now(), usd: +t.usd.toFixed(4), tokens: t.tokens, output: t.output, cacheRead: t.cacheRead, requests: t.requests, byModel: t.byModel, subagentUsd: +t.subagent.usd.toFixed(4), capUsd: caps.usd, capHits: run.capHits, plan, statuslineSessionUsd: s.statusline?.costUsd ?? null });
   s.lastRun = { usd: t.usd, tokens: t.tokens, end: Date.now() };
@@ -206,7 +271,7 @@ export function onStatusLine(input, prices = loadPrices()) {
   s.sessionUsd = s.statusline.costUsd ?? s.sessionUsd ?? null;
   const t = s.run ? totals(s.run.seen, prices) : null;
   saveSession(s);
-  const caps = s.run ? effectiveCaps(cfg, s.run) : { usd: cfg.capUsd };
+  const caps = s.run ? effectiveCaps(cfg, s.run, s) : { usd: cfg.capUsd };
   const parts = ['◒ Lake'];
   if (t) parts.push(`run ${usd(t.usd)}${caps.usd != null ? ` / ${usd(caps.usd)}` : ''}`);
   if (s.statusline.costUsd != null) parts.push(`session ${usd(s.statusline.costUsd)}`);

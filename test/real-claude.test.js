@@ -54,7 +54,7 @@ test('real Claude Code: hooks fire, cap enforced, measured spend equals Claude C
     // bypassPermissions: the turn is stopped (continue:false) right at the cap
     const b = runClaude({ mode: 'bypassPermissions', cap: 1, port });
     const toolErr = b.events.flatMap((e) => (e.type === 'user' ? e.message.content : [])).find((c) => c.is_error);
-    assert.match(toolErr.content, /Lake Meter cap reached/);
+    assert.match(toolErr.content, /Lake Meter paused the run at/);
     const runs = readFileSync(join(b.home, '.lake-meter', 'runs.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
     assert.ok(runs.some((r) => r.stoppedByCap));
   } finally {

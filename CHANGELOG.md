@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.2 (2026-11-16)
+- `/meter` no longer resets the current run (it was showing $0.00)
+- `init --cap '$10'` and `cap '$10'` parse as $10; invalid values exit non-zero and do not disable the cap
+- README config example is valid JSON; an unparseable `config.json` is warned about on stderr and ignored; `cap` refuses to overwrite a broken file
+- `sessionCapUsd` headroom is stored on the session, so Yes no longer re-asks on every later call
+- Config values are validated (string numbers coerced, `onCap` case-insensitive, `extendPct` must be > 0, invalid fields fall back with a warning)
+- Unattended stop (`bypassPermissions` / `onCap: "stop"`) says `Lake Meter paused the run at $X (cap $Y)` and includes a receipt, not "The user has been asked"
+- MCP `serverInfo.version` is read from `package.json`
+- CLI errors (missing plan file, unknown command, bad cap) exit non-zero
+- Re-running `init` keeps the original `settings.json.lake-meter.bak`
+- README and landing: `npx lake-meter@latest` command forms; subagents are installed by default; `init --project` notes skills/agents paths; `npm run demo` is marked clone-only
+
+
 ## 0.1.1 (2026-11-16)
 - Demo of a plan split into steps with model picks, a cost estimate, and the cap stopping a run
 - README and landing: removed the stale “npm package is not available yet” install fallback

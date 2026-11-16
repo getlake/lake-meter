@@ -4,7 +4,7 @@ import { loadPrices } from './pricing.js';
 import { analyzePlan } from './plan.js';
 import { planTable, runSummary, usd } from './format.js';
 import { onUserPromptSubmit, onPreToolUse, onPostToolUse, onStop, onStatusLine, effectiveCaps } from './hooks.js';
-import { loadConfig, saveUserConfig, loadSession, latestSessionId, readRuns, home } from './state.js';
+import { loadConfig, saveUserConfig, loadSession, latestSessionId, readRuns, home, parseCapUsd } from './state.js';
 import { totals } from './transcript.js';
 import { init, uninstall } from './init.js';
 import { serve } from './mcp.js';
@@ -41,11 +41,23 @@ function status(sessionId) {
 }
 
 function setCap(v) {
-  if (v === 'off' || v === 'none') { saveUserConfig({ capUsd: null }); return 'Per-run cap turned off.'; }
-  const n = Number(String(v).replace('$', ''));
-  if (!Number.isFinite(n) || n <= 0) return 'Usage: cap <usd> | off   e.g. cap 10';
-  saveUserConfig({ capUsd: n });
-  return `Per-run cap set to ${usd(n)} (API list-price equivalent). Applies from the next tool call.`;
+  if (v == null || v === '') {
+    process.exitCode = 1;
+    return 'Usage: cap <usd> | off   e.g. cap 10 or cap \'$10\'';
+  }
+  const parsed = parseCapUsd(v, { allowOff: true });
+  if (!parsed.ok) {
+    process.exitCode = 1;
+    return `lake-meter: invalid cap '${v}'. Use a positive number (e.g. 10 or $10) or 'off'.`;
+  }
+  try {
+    if (parsed.value == null) { saveUserConfig({ capUsd: null }); return 'Per-run cap turned off.'; }
+    saveUserConfig({ capUsd: parsed.value });
+  } catch (e) {
+    process.exitCode = 1;
+    return e.message;
+  }
+  return `Per-run cap set to ${usd(parsed.value)} (API list-price equivalent). Applies from the next tool call.`;
 }
 
 function report() {
@@ -99,7 +111,8 @@ export async function main(argv) {
       return;
     }
     case 'plan': {
-      console.log(planFile(args[0], args));
+      const out = planFile(args[0], args);
+      console.log(out);
       return;
     }
     case 'cap': console.log(setCap(args[0])); return;
@@ -108,13 +121,33 @@ export async function main(argv) {
     case 'mcp': serve(); return;
     case 'init': {
       const cap = opt(args, '--cap');
-      init({ project: flag(args, '--project'), capUsd: cap != null ? Number(cap) : undefined, agents: !flag(args, '--no-agents'), statusline: flag(args, '--statusline') });
+      let capUsd;
+      if (cap != null) {
+        const parsed = parseCapUsd(cap);
+        if (!parsed.ok) {
+          process.stderr.write(`lake-meter: invalid --cap '${cap}'. Use a positive number, e.g. --cap 10 or --cap '$10'.\n`);
+          process.exitCode = 1;
+          return;
+        }
+        capUsd = parsed.value;
+      }
+      try {
+        init({ project: flag(args, '--project'), capUsd, agents: !flag(args, '--no-agents'), statusline: flag(args, '--statusline') });
+      } catch (e) {
+        process.stderr.write(`lake-meter: ${e.message}\n`);
+        process.exitCode = 1;
+      }
       return;
     }
     case 'uninstall': uninstall({ project: flag(args, '--project') }); return;
     case 'where': console.log(home()); return;
     case '--version': case '-v': console.log(JSON.parse(readFileSync(new URL('../package.json', import.meta.url))).version); return;
-    default: console.log(HELP);
+    case '--help': case '-h': case undefined:
+      console.log(HELP);
+      return;
+    default:
+      process.stderr.write(`lake-meter: unknown command '${cmd}'\n${HELP}\n`);
+      process.exitCode = 1;
   }
 }
 
@@ -122,7 +155,10 @@ function planFile(file, args) {
   let text;
   if (!file || file === '-') text = readFileSync(0, 'utf8');
   else if (existsSync(file)) text = readFileSync(file, 'utf8');
-  else return `File not found: ${file}`;
+  else {
+    process.exitCode = 1;
+    return `File not found: ${file}`;
+  }
   const a = analyzePlan(text, loadPrices(), { provider: flag(args, '--openai') ? 'openai' : loadConfig(process.cwd()).provider });
   if (!a.steps.length) return 'Could not find steps in that plan (use numbered items, headings or bullets).';
   return flag(args, '--json') ? JSON.stringify(a, null, 2) : planTable(a, { reasons: flag(args, '--why') });

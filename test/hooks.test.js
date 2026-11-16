@@ -59,7 +59,10 @@ test('unattended modes stop the turn instead of prompting', () => {
     const out = onPreToolUse(base(sb, { permission_mode: mode, tool_name: 'Bash', tool_use_id: 'x' }), P);
     assert.equal(out.continue, false);
     assert.equal(out.hookSpecificOutput.permissionDecision, 'deny');
-    assert.match(out.stopReason, /paused the run/);
+    assert.equal(out.hookSpecificOutput.permissionDecisionReason, 'Lake Meter paused the run at $1.20 (cap $1.00)');
+    assert.match(out.stopReason, /Lake Meter paused the run at \$1\.20 \(cap \$1\.00\)/);
+    assert.match(out.systemMessage, /Lake Meter paused the run at \$1\.20 \(cap \$1\.00\)/);
+    assert.doesNotMatch(JSON.stringify(out), /hook error|has been asked how to proceed/i);
   }
 });
 

@@ -46,7 +46,8 @@ export function init(opts = {}) {
   const cli = opts.cli || installRuntime();
   const t = targets(opts);
   const settings = readJson(t.settings);
-  if (existsSync(t.settings)) copyFileSync(t.settings, `${t.settings}.lake-meter.bak`);
+  const bak = `${t.settings}.lake-meter.bak`;
+  if (existsSync(t.settings) && !existsSync(bak)) copyFileSync(t.settings, bak);
   settings.hooks ||= {};
   const add = (evt, group) => {
     settings.hooks[evt] = (settings.hooks[evt] || []).filter((g) => !isOurs(g));

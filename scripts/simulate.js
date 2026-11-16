@@ -61,7 +61,7 @@ export function simulate({ cap = 1.0, mode = 'default', approve = true, home } =
     const id = `toolu_${k}`;
     const out = hook('pre-tool-use', 'PreToolUse', { tool_name: k % 2 ? 'Edit' : 'Bash', tool_input: k % 2 ? { file_path: '/work/acme-api/src/queue/worker.ts' } : { command: 'npm test' }, tool_use_id: id });
     const decision = out?.hookSpecificOutput?.permissionDecision;
-    if (decision === 'deny') { capOut ||= out; break; }
+    if (decision === 'deny' || out?.continue === false) { capOut ||= out; break; }
     if (decision === 'ask') {
       asks++;
       capOut ||= out;
