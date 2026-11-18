@@ -182,10 +182,10 @@ npm run demo        # simulated session: plan breakdown → cap prompt → recei
 
 ## Part of Lake
 
-[Lake](https://getlake.dev/) reviews the agent's plan, with this estimate on every step, before code is written, and a teammate approves that exact version before the agent builds. Solo $12/month, Team $15 per user/month, both with a 14-day free trial. Founding offer: the first 50 users get 2 months free, then 50% off for life ([claim it](https://github.com/getlake/lake-gate/issues/new?template=founding-offer.yml)).
+[Lake](https://getlake.dev/) reviews the agent's plan, with this estimate on every step, before code is written, and a teammate approves that exact version before the agent builds. Solo $12/month, Team $15 per user/month, both with a 14-day free trial. Founding offer: the first 50 users get 2 months free, then 50% off for life ([claim it](https://getlake.dev/#founding)).
 
 ## License
 
-lake-meter 0.1.5 and later are source-available under the [Lake Commercial License](LICENSE): a 14-day free trial, then a paid Lake subscription. Versions up to and including 0.1.4 were released under the MIT License, and those copies stay MIT.
+lake-meter 0.1.5 and later are source-available under the [Lake Commercial License](https://getlake.dev/license/): a 14-day free trial, then a paid Lake subscription. Versions up to and including 0.1.4 were released under the MIT License, and those copies stay MIT.
 
 © 2026 Lake
