@@ -4,7 +4,7 @@ Status: READY. Run scripts/set-placeholders.sh first so the links are filled in.
 
 **Title** (80 char max):
 
-Show HN: Lake Meter – per-step model picks and a hard per-run cap for Claude Code
+Show HN: Lake Meter – per-step model picks and a per-run cap that stops and asks for Claude Code
 
 **URL:** https://github.com/getlake/lake-meter
 

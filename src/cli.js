@@ -9,7 +9,7 @@ import { totals } from './transcript.js';
 import { init, uninstall } from './init.js';
 import { serve } from './mcp.js';
 
-const HELP = `lake-meter · per-step model picks and a hard per-run cap for Claude Code
+const HELP = `lake-meter · per-step model picks and a per-run cap that stops and asks for Claude Code
 
   npx lake-meter init [--project] [--cap 5] [--no-agents] [--statusline]   install hooks, statusline, /meter
   lake-meter plan <file.md> [--openai] [--why]   plan breakdown: complexity, model per step, cost ranges
