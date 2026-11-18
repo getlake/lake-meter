@@ -8,7 +8,7 @@
     "source": "github"
   },
   "version": "0.1.3",
-  "websiteUrl": "https://getlake.github.io/lake-meter/",
+  "websiteUrl": "https://getlake.dev/lake-meter/",
   "packages": [
     {
       "registryType": "npm",
