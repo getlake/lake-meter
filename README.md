@@ -1,6 +1,6 @@
 # lake-meter
 
-**A model for every step, and a hard stop for every run. For Claude Code.**
+**A model for every step, and a cap that stops and asks. For Claude Code.**
 
 Claude Code is great until a run loops, fans out into subagents, or quietly eats your 5‑hour window on a step a cheaper model could have done. `lake-meter` adds two things using only Claude Code's own extension points (hooks, statusline, skills, MCP):
 
