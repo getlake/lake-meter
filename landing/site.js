@@ -61,10 +61,10 @@ function gcEvent(path, title) {
   });
 })();
 
-// Team pilot CTA: count one click per session. The link opens a GitHub issue template.
-document.querySelectorAll('[data-team-pilot]').forEach((a) => {
+// Lake CTA: count one click per session. The link opens getlake.dev pricing.
+document.querySelectorAll('[data-lake-cta]').forEach((a) => {
   a.addEventListener('click', () => {
-    try { if (sessionStorage.getItem('lake_team_pilot')) return; sessionStorage.setItem('lake_team_pilot', '1'); } catch { /* storage blocked: count anyway */ }
-    gcEvent('team-pilot', 'Request a team pilot');
+    try { if (sessionStorage.getItem('lake_meter_to_lake')) return; sessionStorage.setItem('lake_meter_to_lake', '1'); } catch { /* storage blocked: count anyway */ }
+    gcEvent('meter-to-lake', 'See Lake pricing');
   });
 });

@@ -1,5 +1,7 @@
 # lake-meter
 
+> **lake-meter is now the cost layer of [Lake](https://getlake.dev/).** Lake shifts review left: your coding agent's plan gets a cost for every step and a teammate's review before any code is written, and this cap holds while the agent runs. One install gives you both: `npx lake-gate init --cap 10`. 14-day free trial, then from $12/month ([pricing](https://getlake.dev/#pricing)). This package keeps working on its own.
+
 **A model for every step, and a cap that stops and asks. For Claude Code.**
 
 Claude Code is great until a run loops, fans out into subagents, or quietly eats your 5‑hour window on a step a cheaper model could have done. `lake-meter` adds two things using only Claude Code's own extension points (hooks, statusline, skills, MCP):
@@ -178,10 +180,12 @@ Step titles are stored locally in `~/.lake-meter`, along with config and a run l
 npm run demo        # simulated session: plan breakdown → cap prompt → receipt
 ```
 
-## Teams
+## Part of Lake
 
-Works with [lake-gate](https://getlake.dev/lake-gate/): a teammate approves the plan before the expensive run. Shared caps and a dashboard of runs by repo and model are in early access. [Request a team pilot](https://getlake.dev/lake-meter/#waitlist).
+[Lake](https://getlake.dev/) reviews the agent's plan, with this estimate on every step, before code is written, and a teammate approves that exact version before the agent builds. Solo $12/month, Team $15 per user/month, both with a 14-day free trial. Founding offer: the first 50 users get 2 months free, then 50% off for life ([claim it](https://github.com/getlake/lake-gate/issues/new?template=founding-offer.yml)).
 
 ## License
 
-MIT © Lake
+lake-meter 0.1.5 and later are source-available under the [Lake Commercial License](LICENSE): a 14-day free trial, then a paid Lake subscription. Versions up to and including 0.1.4 were released under the MIT License, and those copies stay MIT.
+
+© 2026 Lake

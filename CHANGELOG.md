@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 (2026-11-18)
+- lake-meter is now the cost layer of Lake (getlake.dev): README, npm description and homepage point to Lake. No code changes.
+- License: 0.1.5 and later are under the Lake Commercial License (14-day free trial, then paid). 0.1.4 and earlier stay MIT.
+
 ## 0.1.3 (2026-11-16)
 - `/meter` after a finished run no longer records that run a second time (`report` no longer double-counts)
 - An unattended cap stop still ends the turn and records once; a later Stop hook does not add a duplicate row

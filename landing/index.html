@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>lake-meter · A model for every step, a cap that stops and asks</title>
-<meta name="description" content="A model for every step. A cap that stops and asks. Per-step model picks in plan mode, a per-run cap that stops and asks, and a measured receipt for Claude Code. Local only, MIT.">
+<meta name="description" content="A model for every step. A cap that stops and asks. Per-step model picks in plan mode, a per-run cap that stops and asks, and a measured receipt for Claude Code. Part of Lake. Local only.">
 <meta name="theme-color" content="#0e7c7b">
 <meta property="og:title" content="lake-meter · A model for every step, a cap that stops and asks">
 <meta property="og:description" content="Per-step model picks and a cap that stops and asks for Claude Code. One command, local only, no telemetry.">
@@ -29,7 +29,7 @@ html:not([data-ab-h1=b]) .ab-h1-b,html[data-ab-h1=b] .ab-h1-a,
 html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!important}
 </style>
 <script src="site.js" defer></script>
-<!-- Visit counting: GoatCounter (free, cookieless, no consent banner needed). Site code: lakehq. -->
+<!-- Visit counting: GoatCounter (cookieless, no consent banner needed). Site code: lakehq. -->
 <script data-goatcounter="https://lakehq.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -49,7 +49,7 @@ html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!i
   <nav aria-label="Main">
     <a href="#how">How it works</a>
     <a href="#honest">Honest numbers</a>
-    <a href="#teams">Teams</a>
+    <a href="#teams">Lake</a>
     <a class="btn btn-ghost" href="https://github.com/getlake/lake-meter"><svg><use href="#i-gh"/></svg>GitHub</a>
   </nav>
 </header>
@@ -59,7 +59,7 @@ html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!i
   <img class="scene" src="assets/lake-editorial-scene.svg" alt="" fetchpriority="high">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow"><span class="rule"></span>OPEN SOURCE · CLAUDE CODE · MIT</p>
+      <p class="eyebrow"><span class="rule"></span>PART OF LAKE · CLAUDE CODE</p>
       <div class="ab-h1-a">
         <h1 id="h1">A model for every step. <span>A cap that stops and asks.</span></h1>
         <p class="lede">lake-meter suggests the right model for each step of your plan, and stops and asks when it reaches the budget you set. <strong>Before the limit is gone.</strong></p>
@@ -175,17 +175,18 @@ html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!i
 <section id="teams" class="pro" aria-labelledby="teams-h">
   <div class="wrap pro-grid">
     <div>
-      <p class="eyebrow light"><span class="rule"></span>FOR TEAMS</p>
-      <h2 id="teams-h">Running Claude Code <span>across a team?</span></h2>
+      <p class="eyebrow light"><span class="rule"></span>PART OF LAKE</p>
+      <h2 id="teams-h">Review the plan, <span>before the code.</span></h2>
       <ul class="pro-list">
-        <li><svg><use href="#i-check"/></svg><span>Works with <a href="https://getlake.dev/lake-gate/">lake-gate</a>: a teammate approves the plan before the expensive run</span></li>
-        <li><svg><use href="#i-check"/></svg>Early access: shared caps and a dashboard of runs by repo and model. We're talking to a few teams.</li>
+        <li><svg><use href="#i-check"/></svg><span>lake-meter is the cost layer of <a href="https://getlake.dev/">Lake</a>: a teammate reviews the agent's plan, with this cost on every step, before any code is written</span></li>
+        <li><svg><use href="#i-check"/></svg><span>One install for both: <code>npx lake-gate init --cap 10</code>. Solo $12/month, Team $15 per user/month, 14-day free trial</span></li>
+        <li><svg><use href="#i-check"/></svg><span>Founding offer: the first 50 users get 2 months free, then 50% off for life</span></li>
       </ul>
     </div>
     <aside class="waitlist" id="waitlist">
-      <p class="waitlist-title">Request a team pilot</p>
-      <a class="btn" href="https://github.com/getlake/lake-meter/issues/new?template=request-a-team-pilot.yml" data-team-pilot>Request a team pilot <svg><use href="#i-arrow"/></svg></a>
-      <p class="form-note">Opens a short GitHub issue. We only use it to reply.</p>
+      <p class="waitlist-title">See Lake</p>
+      <a class="btn" href="https://getlake.dev/#pricing" data-lake-cta>Plans and founding offer <svg><use href="#i-arrow"/></svg></a>
+      <p class="form-note">14-day free trial. Paid checkout isn't open yet.</p>
     </aside>
   </div>
 </section>
@@ -195,10 +196,10 @@ html:not([data-ab-cta=b]) .ab-cta-b,html[data-ab-cta=b] .ab-cta-a{display:none!i
   <a class="brand" href="#top"><img src="assets/logo-mark.svg" alt="" width="24" height="24"><span>Lake<i>.</i></span></a>
   <span>A clear course before the code.</span>
   <span class="grow"></span>
-  <span class="tools">Lake tools · <a href="https://getlake.dev/lake-gate/">lake-gate</a> · <a href="https://getlake.dev/lake-meter/">lake-meter</a></span>
+  <span class="tools">Part of <a href="https://getlake.dev/">Lake</a></span>
   <a href="https://github.com/getlake/lake-meter">GitHub</a>
   <a href="https://www.npmjs.com/package/lake-meter">npm</a>
-  <span>MIT · not affiliated with Anthropic</span>
+  <span>Lake Commercial License · not affiliated with Anthropic</span>
 </footer>
 </body>
 </html>

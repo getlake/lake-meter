@@ -1,7 +1,7 @@
 {
   "name": "lake-meter",
-  "version": "0.1.4",
-  "description": "Per-step model picks and a cap that stops and asks for Claude Code. Hooks + MCP, local only, no telemetry.",
+  "version": "0.1.5",
+  "description": "The cost layer of Lake (getlake.dev): per-step model picks and a cap that stops and asks, for Claude Code. Local only, no telemetry. 14-day free trial.",
   "type": "module",
   "bin": {
     "lake-meter": "bin/lake-meter.js"
@@ -31,9 +31,9 @@
     "cursor",
     "ai-agents"
   ],
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "author": "Lake",
-  "homepage": "https://github.com/getlake/lake-meter#readme",
+  "homepage": "https://getlake.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/getlake/lake-meter.git"
