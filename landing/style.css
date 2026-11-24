@@ -211,3 +211,4 @@ svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .cta-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:14px;font-weight:600;color:var(--teal)}
 .cta-link svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
 .cta-link:hover{color:var(--teal-d)}
+@media (max-width:400px){.steps li{grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:11px 8px}.steps .n{display:none}.steps .c{white-space:nowrap;font-size:12.5px}}
